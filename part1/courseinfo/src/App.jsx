@@ -1,54 +1,51 @@
-import { useState } from 'react'
+const Header = (props) => <h1>{props.course}</h1>
 
-const Button = (props) => {
-  
-  return (
-    <button onClick={props.handleClick}>{props.text}</button>
-  )
-}
-
-
-const StatisticLine = (props) => (
-  <tr>
-    <td>{props.text}</td>
-    <td>{props.value}</td>
-  </tr>
+const Content = (props) => (
+  <div>
+    <Part part={props.parts[0]} />
+    <Part part={props.parts[1]} />
+    <Part part={props.parts[2]} />
+  </div>
 )
 
+const Part = (props) => (
+  <p>
+    {props.part.name} {props.part.exercises}
+  </p>
+)
+
+const Total = (props) => <p>Number of exercises {props.total}</p>
+
 const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-
-  let average = Math.round((good - bad))
-  let positive = Math.round((good/(good+neutral+bad))*100) + " %"
-
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10,
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7,
+      },
+      {
+        name: 'State of a component',
+        exercises: 14,
+      },
+    ],
+  }
 
   return (
     <div>
-      <h1>give feedback</h1>
-        <Button handleClick={() => setGood(good + 1)} text="good" />
-        <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
-        <Button handleClick={() => setBad(bad + 1)} text="bad" />
-      <h1>statistics</h1>
-      {good === 0 && neutral === 0 && bad === 0 ? (
-        <p>No feedback given</p>
-      ) : (
-        <table>
-          <tbody>
-            {[
-              { text: 'good', value: good },
-              { text: 'neutral', value: neutral },
-              { text: 'bad', value: bad },
-              { text: 'average', value: average },
-              { text: 'positive', value: positive },
-            ].map((stat) => (
-              <StatisticLine key={stat.text} text={stat.text} value={stat.value} />
-            ))}
-          </tbody>
-        </table>
-      )}
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+      <Total
+        total={
+          course.parts[0].exercises +
+          course.parts[1].exercises +
+          course.parts[2].exercises
+        }
+      />
     </div>
   )
 }
