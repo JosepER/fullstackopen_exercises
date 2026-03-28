@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import initialPhonebook from '../data/phone'
 import Filter from './components/Filter.jsx'
+import PersonForm from './components/PersonForm.jsx'
+import ShowPersons from './components/ShowPersons.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState(initialPhonebook) 
@@ -8,7 +10,7 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-const addName = (event) =>{
+  const addName = (event) =>{
   event.preventDefault()
 
   if(persons.some((person) => person.name === newName)){
@@ -20,15 +22,12 @@ const addName = (event) =>{
   }
 }
 
-
-
-
-const personsToShow =  
-  filter.trim() === '' 
-    ? persons 
-    : persons.filter((person) => 
-      person.name.toLocaleLowerCase().includes(filter.toLowerCase())
-     );
+  const personsToShow =  
+    filter.trim() === '' 
+      ? persons 
+      : persons.filter((person) => 
+        person.name.toLocaleLowerCase().includes(filter.toLowerCase())
+      );
 
   return (
     <div>
@@ -36,7 +35,13 @@ const personsToShow =
       <Filter value={filter} onChange={(event) => setFilter(event.target.value)} />
 
       <h3>add a new</h3>
-      <PersonForm />
+      <PersonForm 
+        addName={addName}
+        newName={newName}
+        setNewName={setNewName}
+        newPhoneNumber={newPhoneNumber}
+        setNewPhoneNumber={setNewPhoneNumber}
+      />
       
       <h3>Numbers</h3>
       <ShowPersons persons={personsToShow} />
