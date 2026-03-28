@@ -1,4 +1,4 @@
-const PersonForm = () => {
+const PersonForm = ({ addName, newName, setNewName, newPhoneNumber, setNewPhoneNumber }) => {
 
   return(<form onSubmit={addName}>
         <div>
