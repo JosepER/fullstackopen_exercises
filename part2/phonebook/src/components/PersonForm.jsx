@@ -1,4 +1,4 @@
-const PersonForm = ({ addName, newName, setNewName, newPhoneNumber, setNewPhoneNumber }) => {
+const PersonForm = ({ addName, newName, setNewName, newNumber, setNewNumber }) => {
 
   return(<form onSubmit={addName}>
         <div>
@@ -10,8 +10,8 @@ const PersonForm = ({ addName, newName, setNewName, newPhoneNumber, setNewPhoneN
         <div>
           number: <input 
             type="tel"
-            value={newPhoneNumber}
-            onChange={(event) => setNewPhoneNumber(event.target.value)}
+            value={newNumber}
+            onChange={(event) => setNewNumber(event.target.value)}
           />
         </div>
         <div>

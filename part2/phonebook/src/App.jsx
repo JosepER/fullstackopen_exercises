@@ -1,26 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import initialPhonebook from '../data/phone'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import ShowPersons from './components/ShowPersons.jsx'
+import axios from 'axios'
+
+const personsUrl = 'http://localhost:3001/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState(initialPhonebook) 
-  const [newName, setNewName] = useState('')
-  const [newPhoneNumber, setNewPhoneNumber] = useState('')
+  // const [persons, setPersons] = useState(initialPhonebook)
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('') // Added state for name input
+  const [newNumber, setNewNumber] = useState('') // Added state for phone number input
   const [filter, setFilter] = useState('')
 
-  const addName = (event) =>{
-  event.preventDefault()
+  useEffect(() => {
+    axios.get(personsUrl)
+      .then(response => setPersons(response.data))
+      .catch(error => console.log(`Error when initially fetching data: ${error}`))
+  }, [])
 
-  if(persons.some((person) => person.name === newName)){
-    window.alert(`${newName} is already added to phonebook. Please use a different name.`)
-  } else{
-    setPersons(persons.concat({name: newName, phone: newPhoneNumber}))
-    setNewName('')
-    setNewPhoneNumber('')
+  const addName = (event) =>{
+    event.preventDefault() 
+
+    if(persons.some((person) => person.name === newName)){
+      window.alert(`${newName} is already added to phonebook. Please use a different name.`)
+    } else{
+      setPersons(persons.concat({name: newName, number: newNumber}))
+      setNewName('')
+      setNewNumber('')
+
+      axios.post(personsUrl, {name: newName, number: newNumber})
+        .then(response => { response.data })
+        .catch(error => console.log(`Error when adding a new person: ${error}`))
+
+    }
   }
-}
 
   const personsToShow =  
     filter.trim() === '' 
@@ -39,8 +54,8 @@ const App = () => {
         addName={addName}
         newName={newName}
         setNewName={setNewName}
-        newPhoneNumber={newPhoneNumber}
-        setNewPhoneNumber={setNewPhoneNumber}
+        newNumber={newNumber}
+        setNewNumber={setNewNumber}
       />
       
       <h3>Numbers</h3>
