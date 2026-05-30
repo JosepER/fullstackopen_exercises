@@ -3,9 +3,9 @@ import initialPhonebook from '../data/phone'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import ShowPersons from './components/ShowPersons.jsx'
+import { getPersons, addPerson, deletePerson } from './services/phonebook.js'
 import axios from 'axios'
 
-const personsUrl = 'http://localhost:3001/persons'
 
 const App = () => {
   // const [persons, setPersons] = useState(initialPhonebook)
@@ -15,9 +15,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios.get(personsUrl)
-      .then(response => setPersons(response.data))
-      .catch(error => console.log(`Error when initially fetching data: ${error}`))
+    getPersons().then(initialPersons => setPersons(initialPersons))
   }, [])
 
   const addName = (event) =>{
@@ -30,11 +28,25 @@ const App = () => {
       setNewName('')
       setNewNumber('')
 
-      axios.post(personsUrl, {name: newName, number: newNumber})
-        .then(response => { response.data })
-        .catch(error => console.log(`Error when adding a new person: ${error}`))
+      addPerson({name: newName, number: newNumber})
 
     }
+  }
+
+  const handleDeletePerson = (id) => {
+
+    // Get the name of the person
+    const personName = persons.find(person => person.id === id).name
+
+    if (window.confirm(`Are you sure you want to delete ${personName}?`)) {
+      deletePerson(id)
+        .then(() => {
+          const personsUpdated = persons.filter(person => person.id !== id);
+          setPersons(personsUpdated);
+      })
+
+    }
+
   }
 
   const personsToShow =  
@@ -59,7 +71,7 @@ const App = () => {
       />
       
       <h3>Numbers</h3>
-      <ShowPersons persons={personsToShow} />
+      <ShowPersons persons={personsToShow} onDelete={handleDeletePerson} />
     </div>
   )
 }
