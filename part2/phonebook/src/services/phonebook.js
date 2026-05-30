@@ -26,4 +26,16 @@ const deletePerson = (id) => {
 
 }
 
-export { getPersons, addPerson, deletePerson }
+const updatePersonNumber = (id, person) => {
+
+    return axios
+    .put(`${personsUrl}/${id}`, person)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log(`Error when updating the phone number: ${error}`)
+      throw error
+    })
+
+}
+
+export { getPersons, addPerson, deletePerson, updatePersonNumber }

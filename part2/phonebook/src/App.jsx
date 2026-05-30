@@ -3,7 +3,7 @@ import initialPhonebook from '../data/phone'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import ShowPersons from './components/ShowPersons.jsx'
-import { getPersons, addPerson, deletePerson } from './services/phonebook.js'
+import { getPersons, addPerson, deletePerson, updatePersonNumber } from './services/phonebook.js'
 import axios from 'axios'
 
 
@@ -22,7 +22,23 @@ const App = () => {
     event.preventDefault() 
 
     if(persons.some((person) => person.name === newName)){
-      window.alert(`${newName} is already added to phonebook. Please use a different name.`)
+      const personToUpdate = persons.find((person) => person.name === newName)
+
+      //debug:
+      console.log(persons)
+
+      if( window.confirm(`${personToUpdate.name} already exists in the phonebook. Do you want to update the number?`)) {
+        updatePersonNumber(personToUpdate.id, {...personToUpdate, number: newNumber})
+          .then(updatedPerson => {
+            setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
+            setNewName('');
+            setNewNumber('');
+          });
+      }
+
+      //debug:
+      console.log(persons)
+
     } else{
       setPersons(persons.concat({name: newName, number: newNumber}))
       setNewName('')
