@@ -37,6 +37,12 @@ const App = () => {
             setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person));
             setNewName('');
             setNewNumber('');
+
+            setNotificationMessage(`Updated ${updatedPerson.name}'s number`);
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 5000);
+
           });
       }
 
