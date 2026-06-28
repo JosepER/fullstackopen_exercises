@@ -77,6 +77,11 @@ const App = () => {
         .then(() => {
           const personsUpdated = persons.filter(person => person.id !== id);
           setPersons(personsUpdated);
+
+          setNotificationMessage(`Deleted ${personName}`)
+          setTimeout(()=>{
+            setNotificationMessage(null)
+          }, 5000)         
       })
 
     }
