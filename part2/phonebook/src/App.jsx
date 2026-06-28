@@ -3,6 +3,7 @@ import initialPhonebook from '../data/phone'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import ShowPersons from './components/ShowPersons.jsx'
+import{ Error, Notification } from './components/Notification.jsx'
 import { getPersons, addPerson, deletePerson, updatePersonNumber } from './services/phonebook.js'
 import axios from 'axios'
 
@@ -13,14 +14,17 @@ const App = () => {
   const [newName, setNewName] = useState('') // Added state for name input
   const [newNumber, setNewNumber] = useState('') // Added state for phone number input
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     getPersons().then(initialPersons => setPersons(initialPersons))
   }, [])
 
   const addName = (event) =>{
-    event.preventDefault() 
+    event.preventDefault()
 
+    // The person already exists in the phonebook, ask if the user wants to update the number
     if(persons.some((person) => person.name === newName)){
       const personToUpdate = persons.find((person) => person.name === newName)
 
@@ -39,12 +43,20 @@ const App = () => {
       //debug:
       console.log(persons)
 
+    // The person does not exist in the phonebook, add them
     } else{
       setPersons(persons.concat({name: newName, number: newNumber}))
       setNewName('')
       setNewNumber('')
 
-      addPerson({name: newName, number: newNumber})
+      addPerson({name: newName, number: newNumber}).then(
+        addedPerson => {
+          setNotificationMessage(`Added ${addedPerson.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        }
+      )
 
     }
   }
@@ -75,6 +87,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
+      <Error message={errorMessage} />
+
       <Filter value={filter} onChange={(event) => setFilter(event.target.value)} />
 
       <h3>add a new</h3>
