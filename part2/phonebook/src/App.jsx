@@ -83,9 +83,13 @@ const App = () => {
             setNotificationMessage(null)
           }, 5000)         
       })
-
+      .catch((error) => {
+        setErrorMessage(`Information of ${personName} has already been removed from the server`)
+        setTimeout(()=>{
+          setErrorMessage(null)
+        }, 5000)
+      })
     }
-
   }
 
   const personsToShow =  

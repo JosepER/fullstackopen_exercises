@@ -22,7 +22,6 @@ const deletePerson = (id) => {
 
     return axios.delete(`${personsUrl}/${id}`)
         .then(response => response.data)
-        .catch(error => console.log(`Error when deleting a person: ${error}`))
 
 }
 
